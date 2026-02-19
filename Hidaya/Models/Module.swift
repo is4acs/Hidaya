@@ -795,6 +795,431 @@ Une purification rituelle avec de l'eau propre, obligatoire avant la prière.
             ]
         ),
         Module(
+            id: "ramadan",
+            title: "Le Ramadan",
+            description: "Le mois sacré du jeûne",
+            iconName: "moon.fill",
+            lessons: [
+                Lesson(
+                    id: "ramadan-why",
+                    title: "Pourquoi le Ramadan?",
+                    content: """
+**Le Ramadan** - Le mois le plus béni de l'année, 4ème pilier de l'Islam.
+
+📋 **Qu'est-ce que le Ramadan?**
+Le 9ème mois du calendrier lunaire islamique, pendant lequel les musulmans jeûnent de l'aube au coucher du soleil.
+
+**Verset du Coran (2:183):**
+"Ô vous qui croyez! Le jeûne vous a été prescrit comme il a été prescrit à ceux avant vous, ainsi vous atteindrez la piété."
+
+🌙 **Pourquoi jeûner?**
+
+**1. La piété (Taqwa)**
+- Le jeûne nous rapproche d'Allah
+- On apprend à se contrôler
+- On devient conscient de Sa présence
+
+**2. La discipline spirituelle**
+- Maîtrise des désirs
+- Patience et persévérance
+- Renforcement de la volonté
+
+**3. L'empathie pour les pauvres**
+- Ressentir la faim des nécessiteux
+- Développer la compassion
+- Encourager la charité
+
+**4. La purification**
+- Purification de l'âme
+- Pardon des péchés
+- Renouveau spirituel
+
+**5. Le mois du Coran**
+- Le Coran a été révélé pendant Ramadan
+- Moment privilégié pour la récitation
+- Nuit du Destin (Laylat al-Qadr)
+
+💡 **Les bienfaits du Ramadan:**
+- Pardon de tous les péchés passés
+- Récompenses multipliées (x10 à x700)
+- La nuit du Destin vaut 1000 mois
+- Intercession le Jour du Jugement
+- Entrée par la porte Ar-Rayyan
+
+🎯 **Ce qu'Allah dit:**
+"Je n'ai créé les djinns et les hommes que pour qu'ils M'adorent." (51:56)
+
+Le Ramadan est l'occasion de remplir ce but ultime avec intensité et dévotion.
+"""
+                ),
+                Lesson(
+                    id: "ramadan-rules",
+                    title: "Les Règles du Jeûne",
+                    content: """
+**Les règles du jeûne** - Ce qu'il faut savoir pour un jeûne valide.
+
+📋 **Les conditions du jeûne:**
+
+**Qui doit jeûner?**
+- Musulman
+- Pubère
+- En bonne santé
+- Présent (pas en voyage)*
+
+*Le voyageur peut reporter le jeûne
+
+**Les piliers du jeûne:**
+1. **L'intention (Niyya)** - La veille ou avant l'aube
+2. **L'abstinence** - De Fajr à Maghrib
+
+⏰ **Les horaires:**
+
+| Moment | Arabe | Action |
+|--------|-------|--------|
+| Sahur | السحور | Dernier repas avant l'aube |
+| Début du jeûne | Fajr | الصبح | Cesser de manger/boire |
+| Fin du jeûne | Maghrib | المغرب | Rompre le jeûne (Iftar) |
+
+❌ **Ce qui rompt le jeûne:**
+- Manger ou boire intentionnellement
+- Vomir volontairement
+- Relations conjugales
+- Mensonge, calomnie (affaiblit le jeûne)
+
+✅ **Ce qui n'affecte pas le jeûne:**
+- Oublier et manger/boire (continuer le jeûne)
+- Goûter sans avaler
+- Se brosser les dents (sans avaler)
+- Bailler
+- Se laver
+
+💊 **Les exemptions:**
+- Maladie temporaire → Reporter
+- Maladie chronique → Fidya (nourrir un pauvre par jour)
+- Voyage → Reporter
+- Femmes enceintes/allaitantes → Reporter ou Fidya
+- Menstrues/lochies → Reporter
+
+💡 **Sunna du Sahur:**
+- Manger même peu
+- Dattes sont idéales
+- Beaucoup d'eau
+- Bénédiction dans cette heure
+
+🎯 **Pour un jeûne accepté:**
+- Intention sincère
+- Éviter les péchés
+- Beaucoup de prières et dou'as
+- Bon comportement
+"""
+                ),
+                Lesson(
+                    id: "ramadan-nights",
+                    title: "Les Nuits Bénies",
+                    content: """
+**Les nuits de Ramadan** - Trésors spirituels à ne pas manquer.
+
+🌙 **Laylat al-Qadr - La Nuit du Destin**
+
+**Verset (97:1-3):**
+"Nous l'avons certes fait descendre pendant la Nuit du Destin. Et qui te dira ce qu'est la Nuit du Destin? La Nuit du Destin vaut mieux que mille mois."
+
+**Quand?**
+- Une des 10 dernières nuits impaires
+- Probablement la 27ème nuit
+- À chercher dans les nuits 21, 23, 25, 27, 29
+
+**Pourquoi est-elle si spéciale?**
+- Mille mois = 83 ans et 4 mois!
+- Meilleure qu'une vie entière d'adoration
+- Les anges descendent
+- Paix jusqu'à l'aube
+
+**Que faire cette nuit?**
+- Qiyam (prière de nuit)
+- Récitation du Coran
+- Dou'as sincères
+- Istighfar (demande de pardon)
+
+💎 **Dou'a de Laylat al-Qadr:**
+"اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي"
+"Allahumma innaka 'afuwwun tuhibbul-'afwa fa'fu 'anni"
+"Ô Allah, Tu es Celui qui pardonne, Tu aimes le pardon, alors pardonne-moi."
+
+🕌 **Tarawih - Prières nocturnes**
+- Après la prière Isha
+- 8 à 20 raka'at
+- Récitation prolongée du Coran
+- À la mosquée si possible
+
+⭐ **Qiyam al-Layl**
+- Prières volontaires de nuit
+- Spécialement les 10 derniers jours
+- Le Prophète ﷺ intensifiait ces nuits
+- Le meilleur moment pour les dou'as
+
+💡 **Les 10 derniers jours:**
+- Le Prophète ﷺ resserrait sa ceinture
+- Restait éveillé la nuit
+- Réveillait sa famille
+- I'tikaf (retraite à la mosquée)
+
+🎯 **Conseils pratiques:**
+- Prépare-toi physiquement et spirituellement
+- Fais une dou'a list
+- Évite les distractions
+- Coupe les réseaux sociaux
+- Planifie tes nuits à l'avance
+"""
+                ),
+                Lesson(
+                    id: "ramadan-iftar",
+                    title: "L'Iftar et les Dou'as",
+                    content: """
+**L'Iftar** - Le moment béni de la rupture du jeûne.
+
+🌅 **La Sunna de la rupture:**
+
+**1. La rapidité**
+- "Les gens continueront à être dans le bien tant qu'ils rompront le jeûne rapidement"
+- Dès l'appel du Maghrib
+
+**2. Les dattes**
+- Commencer par 1, 3 ou 5 dattes
+- Si pas de dattes: de l'eau
+- Le Prophète ﷺ le faisait toujours
+
+**3. L'eau**
+- Boire de l'eau fraîche
+- Pas trop vite
+- Hydratation progressive
+
+🤲 **Les dou'as de l'iftar:**
+
+**Dou'a principale:**
+"ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ"
+"Dhahaba az-zama'u wabtallatil-'urūqu wa thabatal-ajru in shā'allah"
+"La soif est partie, les veines sont hydratées, et la récompense est confirmée, si Allah le veut."
+
+**Dou'a à tout moment:**
+"اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ"
+"Allāhumma laka sumtu wa 'alā rizqika aftartu"
+"Ô Allah, pour Toi j'ai jeûné et avec Ta subsistance je romps le jeûne."
+
+**Dou'a exaucée:**
+"لِلصَّائِمِ عِنْدَ فِطْرِهِ دَعْوَةٌ مَا تُرَدُّ"
+"Le jeûneur a une dou'a exaucée à la rupture."
+- Fais tes demandes les plus chères
+- Pour toi, ta famille, la Oumma
+
+🍽️ **Conseils nutritionnels:**
+
+**À éviter:**
+- Trop manger d'un coup
+- Aliments trop gras/sucrés
+- Boissons gazeuses
+- Aliments trop salés
+
+**À privilégier:**
+- Dattes + eau
+- Soupes (harira, lentilles)
+- Fruits et légumes
+- Protéines modérées
+- Hydratation progressive
+
+💧 **Entre Iftar et Sahur:**
+- Boire régulièrement
+- Éviter le café/thé (déshydratant)
+- Aliments riches en eau
+- Ne pas sauter le Sahur
+
+🎯 **L'esprit de l'iftar:**
+- Ne pas faire un festin
+- Partager avec les autres
+- Inviter les voisins
+- Penser à ceux qui n'ont pas
+- Charité et générosité
+"""
+                ),
+                Lesson(
+                    id: "ramadan-charity",
+                    title: "La Charité et Zakat al-Fitr",
+                    content: """
+**La charité pendant Ramadan** - Le mois de la générosité.
+
+💰 **Le Prophète ﷺ le plus généreux:**
+"Le Messager d'Allah était le plus généreux des gens, et il l'était encore plus pendant Ramadan."
+
+🌟 **Pourquoi donner pendant Ramadan?**
+
+**1. Récompenses multipliées**
+- Chaque bonne action = x10 à x700
+- Charité pendant Ramadan = immense
+
+**2. Les pauvres ont besoin**
+- Tous jeûnent, pas tous peuvent manger
+- Solidarité de la Oumma
+
+**3. Purification de l'âme**
+- L'avarice disparaît
+- Le cœur s'attendrit
+
+**4. La voie du Prophète**
+- Il donnait sans compter
+- Son exemple à suivre
+
+zakat **Zakat al-Fitr - L'aumône de fin de Ramadan:**
+
+**Qu'est-ce que c'est?**
+- Obligatoire pour chaque musulman
+- À donner avant la prière de l'Aïd
+- Purifie le jeûne des imperfections
+
+**Qui doit la donner?**
+- Chaque musulman
+- Pour soi et ses dépendants
+- Si on a de quoi pour la journée
+
+**Combien?**
+- Environ 2.5 kg de nourriture
+- Ou valeur équivalente en argent
+- Par personne du foyer
+
+**À qui?**
+- Les pauvres et nécessiteux
+- Les mêmes catégories que la Zakat
+
+**Quand?**
+- Derniers jours de Ramadan
+- Avant la prière de l'Aïd
+- Si donné après: simple charité
+
+🎁 **Autres formes de charité:**
+
+**Sadaqah (charité volontaire)**
+- Ce que tu peux
+- Régulièrement
+- Même un sourire
+
+**Partager la nourriture**
+- Inviter à l'iftar
+- "Celui qui nourrit un jeûneur a la même récompense"
+- Voisins, famille, pauvres
+
+**Bon comportement**
+- Éviter de blesser
+- Aider les autres
+- Sourire = charité
+
+💡 **Idées de charité:**
+- Préparer des iftars pour les démunis
+- Donner à des orphelinats
+- Soutenir des mosquées
+- Aider des familles en difficulté
+- Financer des puits d'eau
+
+🎯 **Objectif:**
+"Donne ne serait-ce qu'une datte"
+Même un petit don compte énormément auprès d'Allah.
+"""
+                ),
+                Lesson(
+                    id: "ramadan-eid",
+                    title: "L'Aïd al-Fitr",
+                    content: """
+**L'Aïd al-Fitr** - La fête de la rupture du jeûne.
+
+🎉 **Qu'est-ce que l'Aïd?**
+La fête qui marque la fin du Ramadan, jour de célébration et de gratitude.
+
+**La signification:**
+- "Fitr" = rupture/ouverture
+- Célébration de l'accomplissement
+- Jour de récompense
+- Gratitude envers Allah
+
+📅 **Le jour de l'Aïd:**
+
+**La veille:**
+- Donner Zakat al-Fitr
+- Préparer les vêtements
+- Nettoyer la maison
+
+**Le matin:**
+1. **Se réveiller tôt**
+2. **Ghusl (grandes ablutions)**
+3. **Porter ses meilleurs vêtements**
+4. **Manger quelque chose de sucré** (dattes)
+5. **Aller à la mosquée tôt**
+6. **Prière de l'Aïd** (après le lever du soleil)
+
+🕌 **La prière de l'Aïd:**
+- 2 raka'at
+- Pas d'adhan ni iqama
+- Takbir supplémentaires
+- Khutba (sermon) après
+- Écouter attentivement
+
+🙋 **Les Takbirat:**
+"Allāhu akbar, Allāhu akbar, Allāhu akbar, lā ilāha illallāhu wallāhu akbar, Allāhu akbar wa lillāhil-ḥamd"
+"Allah est le Plus Grand... Il n'y a de divinité qu'Allah..."
+
+- Du coucher du soleil la veille
+- Jusqu'à la prière
+- À voix haute (hommes)
+- En allant à la mosquée
+
+🤝 **La Sunna de l'Aïd:**
+
+**Avant la prière:**
+- Manger des dattes (nombre impair)
+- Prendre un chemin différent au retour
+- Se féliciter: "Taqabbalallāhu minnā wa minkum"
+- "Qu'Allah accepte de nous et de vous"
+
+**Après la prière:**
+- Visiter la famille
+- Échanger des cadeaux
+- Bien manger
+- Se réjouir licitement
+
+- Visiter les cimetières
+- Prier pour les défunts
+
+🎁 **Célébrer ensemble:**
+
+**En famille:**
+- Repas spécial
+- Cadeaux aux enfants (Eidiya)
+- Joie et bonheur
+- Photos souvenirs
+
+**Dans la communauté:**
+- Saluer tout le monde
+- Réconciliations
+- Oublier les rancunes
+- Solidarité
+
+💡 **Attention à éviter:**
+- Les excès alimentaires
+- Les dépenses excessives
+- Les festivités interdites
+- Négliger les prières
+
+🎯 **Le vrai sens de l'Aïd:**
+- Gratitude pour le Ramadan accompli
+- Continuer les bonnes habitudes
+- Ne pas retourner aux péchés
+- L'Aïd est pour celui qui a jeûné et prié
+
+**Dou'a:**
+"Taqabbalallāhu minnā wa minkum wa ākharahū 'alaynā wa 'alaykum bi kulli khayr"
+"Qu'Allah accepte de nous et de vous, et qu'Il nous le fasse revenir avec tout le bien."
+"""
+                )
+            ]
+        ),
+        Module(
             id: "seerah",
             title: "La vie du Prophète ﷺ",
             description: "Biographie du Prophète Muhammad",

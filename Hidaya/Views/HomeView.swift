@@ -5,6 +5,8 @@ struct HomeView: View {
     @AppStorage("streak") private var streak: Int = 0
     @AppStorage("lastOpenDate") private var lastOpenDate: Double = 0
     
+    @StateObject private var viewModel = HomeViewModel()
+    
     private let quotes = [
         "Le Prophète ﷺ a dit: « La prière est la lumière de celui qui prie. »",
         "« En vérité, c'est dans le rappel d'Allah que les cœurs trouvent la paix. » - Coran 13:28",
@@ -13,13 +15,17 @@ struct HomeView: View {
     ]
     
     @State private var currentQuote: String = ""
-    private let prayers = PrayerTime.getTodayPrayers()
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 20) {
                     greetingCard
+                    
+                    if viewModel.isRamadan {
+                        ramadanCard
+                    }
+                    
                     prayerTimesCard
                     progressCard
                     quickActionsCard
@@ -41,6 +47,7 @@ struct HomeView: View {
             .onAppear {
                 updateStreak()
                 currentQuote = quotes.randomElement() ?? quotes[0]
+                viewModel.refreshData()
             }
         }
     }
@@ -74,12 +81,76 @@ struct HomeView: View {
                         .foregroundColor(.secondary)
                 }
             }
+            
+            if !viewModel.cityName.isEmpty {
+                HStack {
+                    Image(systemName: "location.fill")
+                        .font(.caption)
+                        .foregroundColor(Color("EmeraldGreen"))
+                    Text(viewModel.cityName)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
         }
         .padding()
         .frame(maxWidth: .infinity)
         .background(Color(.systemBackground))
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.05), radius: 4)
+    }
+    
+    private var ramadanCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Image(systemName: "moon.fill")
+                    .foregroundColor(Color("Gold"))
+                    .font(.title2)
+                Text("Ramadan Kareem 🌙")
+                    .font(.headline)
+                    .foregroundColor(Color("Gold"))
+                Spacer()
+                Text(viewModel.ramadanDayText)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Temps restant avant le prochain ftour")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                
+                Text(viewModel.timeUntilFtour)
+                    .font(.system(size: 48, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color("EmeraldGreen"))
+                
+                ProgressView(value: viewModel.ramadanProgress)
+                    .progressViewStyle(LinearProgressViewStyle(tint: Color("Gold")))
+                
+                HStack {
+                    Image(systemName: "calendar")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("Fin du Ramadan: \(formatRamadanEndDate())")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding()
+            .background(Color("Gold").opacity(0.1))
+            .cornerRadius(12)
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.05), radius: 4)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("Gold").opacity(0.3), lineWidth: 2)
+        )
     }
     
     private var prayerTimesCard: some View {
@@ -90,12 +161,17 @@ struct HomeView: View {
                 Text("Horaires de prière")
                     .font(.headline)
                 Spacer()
-                Text(formatDate(Date()))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                if viewModel.isLoadingPrayers {
+                    ProgressView()
+                        .scaleEffect(0.7)
+                } else {
+                    Text(formatDate(Date()))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             
-            ForEach(prayers, id: \.name) { prayer in
+            ForEach(viewModel.prayers, id: \.name) { prayer in
                 HStack {
                     Text(prayer.arabicName)
                         .font(.amiri(size: 18))
@@ -210,6 +286,13 @@ struct HomeView: View {
         formatter.dateStyle = .long
         formatter.locale = Locale(identifier: "fr_FR")
         return formatter.string(from: date)
+    }
+    
+    private func formatRamadanEndDate() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.locale = Locale(identifier: "fr_FR")
+        return formatter.string(from: viewModel.ramadanInfo.endDate)
     }
     
     private func updateStreak() {
