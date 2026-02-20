@@ -1,5 +1,4 @@
 import SwiftUI
-import UserNotifications
 
 struct ContentView: View {
     @State private var selectedTab = 0
@@ -37,38 +36,6 @@ struct ContentView: View {
                 .tag(4)
         }
         .tint(Color("EmeraldGreen"))
-        .onAppear {
-            schedulePrayerNotifications()
-        }
-    }
-    
-    private func schedulePrayerNotifications() {
-        let center = UNUserNotificationCenter.current()
-        let prayers = [
-            ("Fajr", "06:00"),
-            ("Dhuhr", "13:00"),
-            ("Asr", "16:30"),
-            ("Maghrib", "19:00"),
-            ("Isha", "21:00")
-        ]
-        
-        for (index, prayer) in prayers.enumerated() {
-            let content = UNMutableNotificationContent()
-            content.title = "\(prayer.0) - Heure de la prière"
-            content.body = "C'est l'heure de \(prayer.0). Qu'Allah accepte ta prière."
-            content.sound = .default
-            
-            let dateComponents = prayer.1.split(separator: ":").compactMap { Int($0) }
-            if dateComponents.count == 2 {
-                var components = DateComponents()
-                components.hour = dateComponents[0]
-                components.minute = dateComponents[1]
-                
-                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-                let request = UNNotificationRequest(identifier: "prayer_\(index)", content: content, trigger: trigger)
-                center.add(request)
-            }
-        }
     }
 }
 

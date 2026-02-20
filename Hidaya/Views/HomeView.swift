@@ -4,6 +4,7 @@ struct HomeView: View {
     @AppStorage("userName") private var userName: String = ""
     @AppStorage("streak") private var streak: Int = 0
     @AppStorage("lastOpenDate") private var lastOpenDate: Double = 0
+    @AppStorage("completedLessonsData") private var completedLessonsData: Data = Data()
     
     @StateObject private var viewModel = HomeViewModel()
     
@@ -55,9 +56,10 @@ struct HomeView: View {
     private var greetingCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: PrayerTimeHelper.getTimeIcon())
-                    .font(.largeTitle)
-                    .foregroundColor(Color("Gold"))
+                Image("MandalaLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
                 
                 VStack(alignment: .leading) {
                     Text(PrayerTimeHelper.getGreeting())
@@ -117,7 +119,7 @@ struct HomeView: View {
             
             VStack(spacing: 12) {
                 HStack {
-                    Text("Temps restant avant le prochain ftour")
+                    Text(viewModel.ramadanCountdownTitle)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     Spacer()
@@ -205,7 +207,10 @@ struct HomeView: View {
     }
     
     private var progressCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        let progress = overallProgress
+        let progressPercent = Int(progress * 100)
+
+        return VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "chart.line.uptrend.xyaxis")
                     .foregroundColor(Color("EmeraldGreen"))
@@ -213,10 +218,10 @@ struct HomeView: View {
                     .font(.headline)
             }
             
-            ProgressView(value: 0.3)
+            ProgressView(value: progress)
                 .progressViewStyle(LinearProgressViewStyle(tint: Color("EmeraldGreen")))
             
-            Text("30% du parcours débutant complété")
+            Text("\(progressPercent)% du parcours débutant complété")
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
@@ -263,8 +268,10 @@ struct HomeView: View {
     private var dailyQuoteCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: "quote.opening")
-                    .foregroundColor(Color("Gold"))
+                Image("MandalaLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 18, height: 18)
                 Text("Citation du jour")
                     .font(.headline)
             }
@@ -310,6 +317,16 @@ struct HomeView: View {
         }
         
         lastOpenDate = today.timeIntervalSince1970
+    }
+
+    private var overallProgress: Double {
+        let completedLessonIds = (try? JSONDecoder().decode([String].self, from: completedLessonsData)) ?? []
+        let completedSet = Set(completedLessonIds)
+        let allLessons = Module.allModules.flatMap(\.lessons)
+        guard !allLessons.isEmpty else { return 0 }
+
+        let completedCount = allLessons.filter { completedSet.contains($0.id) }.count
+        return Double(completedCount) / Double(allLessons.count)
     }
 }
 

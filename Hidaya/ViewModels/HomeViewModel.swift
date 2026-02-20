@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import CoreLocation
+@preconcurrency import UserNotifications
 
 struct PrayerDayTimings: Codable {
     let Fajr: String
@@ -372,6 +373,7 @@ final class HomeViewModel: ObservableObject {
     @Published var prayers: [PrayerTime] = []
     @Published var nextFtourTime: Date?
     @Published var timeUntilFtour: String = "--:--:--"
+    @Published var ramadanCountdownTitle: String = "Temps restant avant le prochain ftour"
     @Published var cityName: String = ""
     @Published var isLoadingPrayers = false
     @Published var ramadanInfo: RamadanInfo = RamadanInfo.current()
@@ -379,6 +381,9 @@ final class HomeViewModel: ObservableObject {
 
     private var todayMaghrib: Date?
     private var tomorrowMaghrib: Date?
+    private var todayFajr: Date?
+    private var tomorrowFajr: Date?
+    private var tomorrowPrayers: [PrayerTime] = []
     private var currentLocation: CLLocation?
     private var lastPrayerFetchDate: Date?
     private var lastPrayerFetchLocation: CLLocation?
@@ -510,12 +515,17 @@ final class HomeViewModel: ObservableObject {
             }
 
             if let tomorrowTimings {
+                self.tomorrowPrayers = self.parsePrayers(from: tomorrowTimings, for: tomorrow)
                 self.tomorrowMaghrib = Self.parseAPITime(tomorrowTimings.Maghrib, on: tomorrow)
+                self.tomorrowFajr = Self.parseAPITime(tomorrowTimings.Fajr, on: tomorrow)
             } else {
+                self.tomorrowPrayers = []
                 self.tomorrowMaghrib = self.estimateTomorrowMaghrib()
+                self.tomorrowFajr = self.estimateTomorrowFajr()
             }
 
             self.updateFtourTime()
+            self.schedulePrayerNotifications()
 
             if todayTimings == nil, let requestError {
                 self.prayerErrorMessage = requestError.localizedDescription
@@ -538,24 +548,16 @@ final class HomeViewModel: ObservableObject {
 
     private func loadDefaultPrayers() {
         prayers = PrayerTime.getTodayPrayers()
+        todayFajr = prayers.first(where: { $0.name == "Fajr" })?.time
         todayMaghrib = prayers.first(where: { $0.name == "Maghrib" })?.time
         tomorrowMaghrib = estimateTomorrowMaghrib()
+        tomorrowFajr = estimateTomorrowFajr()
+        tomorrowPrayers = []
         updateFtourTime()
     }
 
     private func updatePrayers(with timings: PrayerDayTimings, for day: Date) {
-        let prayerData: [(name: String, arabicName: String, rawTime: String)] = [
-            ("Fajr", "الفجر", timings.Fajr),
-            ("Dhuhr", "الظهر", timings.Dhuhr),
-            ("Asr", "العصر", timings.Asr),
-            ("Maghrib", "المغرب", timings.Maghrib),
-            ("Isha", "العشاء", timings.Isha)
-        ]
-
-        let parsedPrayers = prayerData.compactMap { prayer -> PrayerTime? in
-            guard let parsedDate = Self.parseAPITime(prayer.rawTime, on: day) else { return nil }
-            return PrayerTime(name: prayer.name, arabicName: prayer.arabicName, time: parsedDate, isNext: false)
-        }
+        let parsedPrayers = parsePrayers(from: timings, for: day)
 
         guard !parsedPrayers.isEmpty else {
             loadDefaultPrayers()
@@ -572,17 +574,27 @@ final class HomeViewModel: ObservableObject {
             )
         }
 
+        todayFajr = prayers.first(where: { $0.name == "Fajr" })?.time
         todayMaghrib = prayers.first(where: { $0.name == "Maghrib" })?.time
     }
 
     private func updateFtourTime() {
         let now = Date()
 
-        if let todayMaghrib, todayMaghrib > now {
+        if let todayFajr, todayFajr > now {
+            ramadanCountdownTitle = "Temps restant avant le suhur (reprise du jeûne)"
+            nextFtourTime = todayFajr
+        } else if let todayMaghrib, todayMaghrib > now {
+            ramadanCountdownTitle = "Temps restant avant le prochain ftour"
             nextFtourTime = todayMaghrib
+        } else if let tomorrowFajr, tomorrowFajr > now {
+            ramadanCountdownTitle = "Temps restant avant le suhur (reprise du jeûne)"
+            nextFtourTime = tomorrowFajr
         } else if let tomorrowMaghrib, tomorrowMaghrib > now {
+            ramadanCountdownTitle = "Temps restant avant le prochain ftour"
             nextFtourTime = tomorrowMaghrib
         } else {
+            ramadanCountdownTitle = "Temps restant avant le prochain ftour"
             nextFtourTime = estimateTomorrowMaghrib()
         }
 
@@ -594,6 +606,11 @@ final class HomeViewModel: ObservableObject {
         return calendar.date(byAdding: .day, value: 1, to: todayMaghrib)
     }
 
+    private func estimateTomorrowFajr() -> Date? {
+        guard let todayFajr else { return nil }
+        return calendar.date(byAdding: .day, value: 1, to: todayFajr)
+    }
+
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             Task { @MainActor in
@@ -603,7 +620,7 @@ final class HomeViewModel: ObservableObject {
     }
 
     private func tick() {
-        updateTimeUntilFtour()
+        updateFtourTime()
         refreshNextPrayerIfNeeded()
         refreshForDayChangeIfNeeded()
     }
@@ -662,6 +679,54 @@ final class HomeViewModel: ObservableObject {
         let minutes = (remainingSeconds % 3_600) / 60
         let seconds = remainingSeconds % 60
         timeUntilFtour = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    private func parsePrayers(from timings: PrayerDayTimings, for day: Date) -> [PrayerTime] {
+        let prayerData: [(name: String, arabicName: String, rawTime: String)] = [
+            ("Fajr", "الفجر", timings.Fajr),
+            ("Dhuhr", "الظهر", timings.Dhuhr),
+            ("Asr", "العصر", timings.Asr),
+            ("Maghrib", "المغرب", timings.Maghrib),
+            ("Isha", "العشاء", timings.Isha)
+        ]
+
+        return prayerData.compactMap { prayer in
+            guard let parsedDate = Self.parseAPITime(prayer.rawTime, on: day) else { return nil }
+            return PrayerTime(name: prayer.name, arabicName: prayer.arabicName, time: parsedDate, isNext: false)
+        }
+    }
+
+    private func schedulePrayerNotifications() {
+        let now = Date()
+        let allEvents = (prayers + tomorrowPrayers).sorted { $0.time < $1.time }
+        let upcomingEvents = allEvents.filter { $0.time > now }.prefix(10)
+
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            let center = UNUserNotificationCenter.current()
+            let staleIDs = requests
+                .filter { $0.identifier.hasPrefix("hidaya_prayer_") || $0.identifier.hasPrefix("prayer_") }
+                .map(\.identifier)
+            center.removePendingNotificationRequests(withIdentifiers: staleIDs)
+
+            for event in upcomingEvents {
+                var components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: event.time)
+                components.second = 0
+
+                let content = UNMutableNotificationContent()
+                content.title = "\(event.name) - Heure de la prière"
+                if event.name == "Fajr" {
+                    content.body = "C'est l'heure du Fajr et de la reprise du jeûne."
+                } else {
+                    content.body = "C'est l'heure de \(event.name). Qu'Allah accepte ta prière."
+                }
+                content.sound = .default
+
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                let identifier = "hidaya_prayer_\(event.name.lowercased())_\(Int(event.time.timeIntervalSince1970))"
+                let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+                center.add(request)
+            }
+        }
     }
 
     private func prayerCalculationMethod(for countryCode: String) -> Int {

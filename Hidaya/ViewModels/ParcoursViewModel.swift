@@ -2,47 +2,53 @@ import SwiftUI
 
 @MainActor
 class ParcoursViewModel: ObservableObject {
-    @AppStorage("completedModules") private var completedModulesData: Data = Data()
-    @Published var completedModules: Set<String> = []
+    @AppStorage("completedLessonsData") private var completedLessonsData: Data = Data()
+    @Published var completedLessons: Set<String> = []
     @Published var modules = Module.allModules
     
     init() {
         loadProgress()
     }
     
+    var completedModulesCount: Int {
+        modules.filter { module in
+            module.lessons.allSatisfy { completedLessons.contains($0.id) }
+        }.count
+    }
+
+    var totalLessonsCount: Int {
+        modules.reduce(0) { $0 + $1.lessons.count }
+    }
+
+    var completedLessonsCount: Int {
+        let allLessonIds = Set(modules.flatMap(\.lessons).map(\.id))
+        return completedLessons.intersection(allLessonIds).count
+    }
+
     var progressPercentage: Double {
-        Double(completedModules.count) / Double(modules.count)
+        guard totalLessonsCount > 0 else { return 0 }
+        return Double(completedLessonsCount) / Double(totalLessonsCount)
     }
     
     func isCompleted(_ moduleId: String) -> Bool {
-        completedModules.contains(moduleId)
+        guard let module = modules.first(where: { $0.id == moduleId }) else { return false }
+        return module.lessons.allSatisfy { completedLessons.contains($0.id) }
     }
-    
-    func toggleCompletion(_ moduleId: String) {
-        if completedModules.contains(moduleId) {
-            completedModules.remove(moduleId)
-        } else {
-            completedModules.insert(moduleId)
-            let generator = UINotificationFeedbackGenerator()
-            generator.notificationOccurred(.success)
-        }
-        saveProgress()
+
+    func refreshProgress() {
+        loadProgress()
     }
-    
+
     func resetProgress() {
-        completedModules.removeAll()
-        saveProgress()
-    }
-    
-    private func saveProgress() {
-        if let data = try? JSONEncoder().encode(Array(completedModules)) {
-            completedModulesData = data
-        }
+        completedLessons = []
+        completedLessonsData = Data()
     }
     
     private func loadProgress() {
-        if let decoded = try? JSONDecoder().decode([String].self, from: completedModulesData) {
-            completedModules = Set(decoded)
+        if let decoded = try? JSONDecoder().decode([String].self, from: completedLessonsData) {
+            completedLessons = Set(decoded)
+        } else {
+            completedLessons = []
         }
     }
 }

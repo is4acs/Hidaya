@@ -5,14 +5,10 @@ struct ProfileView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("notificationsEnabled") private var notificationsEnabled = true
     @AppStorage("streak") private var streak: Int = 0
-    @AppStorage("completedModules") private var completedModulesData: Data = Data()
+    @AppStorage("completedLessonsData") private var completedLessonsData: Data = Data()
     
     @State private var showResetAlert = false
     @StateObject private var parcoursVM = ParcoursViewModel()
-    
-    private var completedModulesCount: Int {
-        (try? JSONDecoder().decode([String].self, from: completedModulesData).count) ?? 0
-    }
     
     var body: some View {
         NavigationStack {
@@ -28,6 +24,9 @@ struct ProfileView: View {
             .navigationTitle("Profil")
             .navigationBarTitleDisplayMode(.large)
             .background(Color(.systemGroupedBackground))
+            .onAppear {
+                parcoursVM.refreshProgress()
+            }
             .alert("Réinitialiser la progression?", isPresented: $showResetAlert) {
                 Button("Annuler", role: .cancel) {}
                 Button("Réinitialiser", role: .destructive) {
@@ -80,7 +79,7 @@ struct ProfileView: View {
                 
                 StatCard(
                     icon: "book.fill",
-                    value: "\(completedModulesCount)/6",
+                    value: "\(parcoursVM.completedModulesCount)/\(parcoursVM.modules.count)",
                     label: "Modules complétés",
                     color: Color("EmeraldGreen")
                 )
@@ -142,7 +141,7 @@ struct ProfileView: View {
     private func resetProgress() {
         userName = ""
         streak = 0
-        completedModulesData = Data()
+        completedLessonsData = Data()
         parcoursVM.resetProgress()
     }
 }

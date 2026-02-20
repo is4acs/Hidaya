@@ -19,8 +19,7 @@ struct ParcoursView: View {
                             NavigationLink(destination: ModuleDetailView(module: module)) {
                                 ModuleCard(
                                     module: module,
-                                    isCompleted: viewModel.isCompleted(module.id),
-                                    onToggle: { viewModel.toggleCompletion(module.id) }
+                                    isCompleted: viewModel.isCompleted(module.id)
                                 )
                             }
                             .buttonStyle(PlainButtonStyle())
@@ -32,6 +31,9 @@ struct ParcoursView: View {
             .navigationTitle("Parcours")
             .navigationBarTitleDisplayMode(.large)
             .background(Color(.systemGroupedBackground))
+            .onAppear {
+                viewModel.refreshProgress()
+            }
         }
     }
     
@@ -51,7 +53,7 @@ struct ParcoursView: View {
                     Text("\(Int(viewModel.progressPercentage * 100))%")
                         .font(.title)
                         .fontWeight(.bold)
-                    Text("\(viewModel.completedModules.count)/\(viewModel.modules.count)")
+                    Text("\(viewModel.completedLessonsCount)/\(viewModel.totalLessonsCount) leçons")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -73,7 +75,6 @@ struct ParcoursView: View {
 struct ModuleCard: View {
     let module: Module
     let isCompleted: Bool
-    let onToggle: () -> Void
     
     var body: some View {
         VStack(spacing: 12) {
